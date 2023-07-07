@@ -17,11 +17,13 @@ database = "Job Costing"
 username = "nyawinda"
 password = "nyawinda"
 
-conn = pyodbc.connect("DRIVER=" + driver
-+ ";SERVER=" + server
-+ ";DATABASE=" + database
-+ ";UID=" + username
-+ ";PWD=" + password )
+conn = pyodbc.connect(
+    "DRIVER=" + driver +
+    ";SERVER=" + server +
+    ";DATABASE=" + database +
+    ";UID=" + username +
+    ";PWD=" + password
+)
 
 # Define a function to search for a job card
 def search_job_card():
@@ -37,22 +39,6 @@ def search_job_card():
         # Strip any leading or trailing spaces from the data
         cleaned_row = [item.strip() if isinstance(item, str) else item for item in row]
         trv.insert("", "end", values=cleaned_row)
-
-# Execute SQL query to retrieve data from table"""
-"""def display_corresponding_rows(event):
-    selected_item = trv.focus()
-    selected_item_values = trv.item(selected_item, 'values')
-    id_jc_master = selected_item_values[0]
-    cursor.execute(f"SELECT idJCTxLines, iStockID, cDescription, iSource, fUnitPriceIncl, fUnitCost, fTransQty, iWarehouseID FROM _btblJCTxLines WHERE iJCMasterID={id_jc_master} AND iSource = 0")
-    rows = cursor.fetchall()
-    # Clear existing rows from trv2
-    for child in trv2.get_children():
-        trv2.delete(child)
-    # Insert new rows into trv2
-    for row in rows:
-    # Strip any leading or trailing spaces from the data
-     cleaned_row = [item.strip() if isinstance(item, str) else item for item in row]
-     trv2.insert("", "end", values=cleaned_row)"""
 
 def display_corresponding_rows(event):
     selected_item = trv.focus()
@@ -70,7 +56,6 @@ def display_corresponding_rows(event):
             cleaned_row = [item.strip() if isinstance(item, str) else item for item in row]
             trv2.insert("", "end", values=cleaned_row)
 
-
 def update_amount_entry(*args):
     try:
         unit_cost = float(unit_cost_entry.get())
@@ -81,36 +66,26 @@ def update_amount_entry(*args):
     except ValueError:
         pass
 
-# Define a function to display the selected row's values in the textboxes
-"""def display_selected_row_values(event):
-    # Get the selected row's values
+def display_selected_row_values(event):
     selected_item = trv2.focus()
     selected_item_values = trv2.item(selected_item, 'values')
-    update_amount_entry()
-    
-    
-    item_code_entry.delete(0, END)
-    item_code_entry.insert(0, selected_item_values[1])  
-    
-    description_entry.delete(0, END)
-    description_entry.insert(0, selected_item_values[2])
-    
-    source_entry.delete(0, END)
-    source_entry.insert(0, selected_item_values[3])
-    
-    unit_price_entry.delete(0, END)
-    unit_price_entry.insert(0, selected_item_values[4])
-    
-    unit_cost_entry.delete(0, END)
-    unit_cost_entry.insert(0, selected_item_values[5])
-    
-    quantity_entry.delete(0, END)
-    quantity_entry.insert(0, selected_item_values[6])
-    
-    warehouse_entry.delete(0, END)
-    warehouse_entry.insert(0, selected_item_values[7])"""
-
-
+    if selected_item_values:
+        # Display the values in the textboxes
+        item_code_entry.delete(0, END)
+        item_code_entry.insert(0, selected_item_values[1])
+        description_entry.delete(0, END)
+        description_entry.insert(0, selected_item_values[2])
+        source_entry.delete(0, END)
+        source_entry.insert(0, selected_item_values[3])
+        unit_price_entry.delete(0, END)
+        unit_price_entry.insert(0, selected_item_values[4])
+        unit_cost_entry.delete(0, END)
+        unit_cost_entry.insert(0, selected_item_values[5])
+        quantity_entry.delete(0, END)
+        quantity_entry.insert(0, selected_item_values[6])
+        warehouse_entry.delete(0, END)
+        warehouse_entry.insert(0, selected_item_values[7])
+        update_amount_entry()
 
 def validate_float(input_str):
     try:
@@ -118,8 +93,6 @@ def validate_float(input_str):
         return True
     except ValueError:
         return False
-    
-
 
 def reduce_fTransQty():
     # Get the data from the text boxes
@@ -133,68 +106,11 @@ def reduce_fTransQty():
     current_fTransQty = float(selected_item_values[6])
     new_quantity = float(quantity)
     new_fTransQty = current_fTransQty - new_quantity
-    
+
     cursor.execute(f"UPDATE _btblJCTxLines SET fTransQty={new_fTransQty} WHERE idJCTxLines={selected_item_values[0]}")
 
     # Update the display
     display_corresponding_rows(None)
-
-
-
-def display_selected_row_values(event):
-    # Get the selected row's values
-    selected_item = trv2.focus()
-    selected_item_values = trv2.item(selected_item, 'values')
-    
-    # Display the values in the textboxes
-    item_code_entry.delete(0, END)
-    item_code_entry.insert(0, selected_item_values[1])  
-    
-    description_entry.delete(0, END)
-    description_entry.insert(0, selected_item_values[2])
-
-    source_entry.delete(0, END)
-    source_entry.insert(0, selected_item_values[3])
-    
-    unit_price_entry.delete(0, END)
-    unit_price_entry.insert(0, selected_item_values[4])
-    
-    unit_cost_entry.delete(0, END)
-    unit_cost_entry.insert(0, selected_item_values[5])
-    
-    quantity_entry.delete(0, END)
-    quantity_entry.insert(0, selected_item_values[6])
-    
-    warehouse_entry.delete(0, END)
-    warehouse_entry.insert(0, selected_item_values[7])
-    
-    update_amount_entry()
-
-# Define a function to insert data into the database table
-"""def insert_data():
-    # Get the data from the text boxes
-    item_code = item_code_entry.get()
-    description = description_entry.get()
-    source = source_entry.get()
-    unit_price = unit_price_entry.get()
-    unit_cost = unit_cost_entry.get()
-    quantity = quantity_entry.get()
-    warehouse = warehouse_entry.get()
-    amount =  amount_entry.get()
-    return_date = return_date_entry.get()
-
-    reduce_fTransQty()
-
-    # Execute the SQL statement to insert the data into the database table
-    cursor.execute(f"INSERT INTO _btblJCTxLines (iStockID, cDescription, iSource, fUnitPriceIncl, fUnitCost, fTransQty, iWarehouseID) VALUES ('{item_code}', '{description}', '{source}', '{unit_price}', '{unit_cost}', '{quantity}', '{warehouse}')")
-    cursor.execute(f"INSERT INTO PostST (TxDate, Id, Credit, Description, Quantity, Cost, WarehouseID)  VALUES ('{return_date}', '{item_code}','{amount}', '{description}', '{quantity}', '{unit_cost}', '{warehouse}')")
-    cursor.execute(f"INSERT INTO PostGL (TxDate, Id, Debit, Description)  VALUES ('{return_date}', '{item_code}', '{amount}', '{description}')")
-    cursor.execute(f"INSERT INTO PostGL (TxDate, Id,Credit, Description)  VALUES ('{return_date}', '{item_code}', '{amount}', '{description}')")
-    cursor.execute(f"INSERT INTO _etblStockQtys (StockID, WhseID, QtyJCWIP) VALUES ('{item_code}', '{warehouse}','{quantity}')")
-    # Commit the changes to the database
-    conn.commit()"""
-
-
 
 def insert_data():
     # Get the data from the text boxes
@@ -231,10 +147,10 @@ def insert_data():
         # Show error message if there is any exception
         messagebox.showerror("Error", f"Error occurred while inserting data:\n{str(e)}")
 
-
-
 trv = ttk.Treeview(root, columns=(1, 2, 3, 4, 5), show="headings", height="5")
-trv.grid(row=0, column=0, columnspan=6, padx=20, pady=20)
+trv.grid(row=0, column=0, columnspan=6, padx=20,The code continuation is as follows:
+
+```python
 trv.heading(1, text="IdJCMaster")
 trv.heading(2, text="Job Code")
 trv.heading(3, text="Customer")
@@ -275,8 +191,6 @@ trv2.heading(5, text="Unit Price")
 trv2.heading(6, text="Unit Cost")
 trv2.heading(7, text="Quantity")
 trv2.heading(8, text="Warehouse")
-
-# Bind the display_selected_row_values function to the Double-1 event of the trv2 treeview widget
 trv2.bind("<Double-1>", display_selected_row_values)
 trv2.column(1, width=0, stretch=tk.NO)
 trv2.column(2, width=90)
@@ -287,7 +201,7 @@ trv2.column(6, width=80)
 trv2.column(7, width=80)
 trv2.column(8, width=80)
 
-cursor.execute('SELECT idJCTxLines, iStockID, cDescription, iSource, fUnitPriceIncl, fUnitCost, fTransQty, iWarehouseID FROM _btblJCTxLines WHERE iSource = 0' )
+cursor.execute('SELECT idJCTxLines, iStockID, cDescription, iSource, fUnitPriceIncl, fUnitCost, fTransQty, iWarehouseID FROM _btblJCTxLines WHERE iSource = 0')
 rows = cursor.fetchall()
 
 # Insert data into treeview widget
@@ -324,8 +238,7 @@ return_date_entry.config(state='readonly')
 amount_entry = Entry(root)
 unit_cost_entry.bind("<KeyRelease>", update_amount_entry)
 quantity_entry.bind("<KeyRelease>", update_amount_entry)
-
-quantity_entry.bind('<FocusOut>', update_amount_entry) # Bind the function to the FocusOut event of the Entry widget
+quantity_entry.bind('<FocusOut>', update_amount_entry)  # Bind the function to the FocusOut event of the Entry widget
 
 # Set the position of labels and text boxes using grid layout
 label1.grid(row=3, column=0, padx=10, pady=10)
