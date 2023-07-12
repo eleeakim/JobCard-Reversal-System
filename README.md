@@ -1,6 +1,5 @@
-# Screenshort
-
-![Capture4](https://user-images.githubusercontent.com/103770049/229089900-404e0bb0-3443-4209-9725-660d03728bec.PNG)
+# Video Demo
+https://github.com/eleeakim/jobcard-reversal-application/assets/103770049/e43618f8-d46e-4deb-a569-0cb4855c6321
 
 This code is a Python script that uses the tkinter library to create a graphical user interface (GUI) for a job costing application. The application connects to a SQL Server database to retrieve and update data. The GUI has several widgets, including text boxes, buttons, and treeview widgets, that allow the user to interact with the data.
 
